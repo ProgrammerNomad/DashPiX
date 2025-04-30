@@ -210,6 +210,26 @@ This project is licensed under the **MIT License**. You can use, modify, and dis
 
 ---
 
+### 📦 Dependencies Explanation
+
+#### psutil
+- System monitoring and resource management
+- RAM usage tracking
+- Storage usage monitoring
+- CPU temperature reading
+- Process and system utilities
+
+#### Pillow (PIL)
+- Image processing and manipulation
+- Format conversion for weather icons
+- Image resizing and optimization
+- Support for various image formats
+
+To install these dependencies:
+```bash
+pip install psutil pillow
+```
+
 **Let the world see more, with less.** — DashPiX
 
 ---

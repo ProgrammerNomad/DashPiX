@@ -12,5 +12,21 @@
     "show_events": false,
     "show_cpu_temp": false,
     "background_style": "dark",
-    "weather_update_frequency": 600
+    "weather_update_frequency": 600,
+    "show_system_info": false,
+    "clock_style": "24h",
+    "clock_format": "HH:MM:SS",
+    "text_effects": {
+        "scroll_long_text": true,
+        "max_width": 300
+    },
+    "auto_restart": {
+        "enabled": false,
+        "time": "03:00",
+        "days": ["Monday", "Wednesday", "Friday"]
+    },
+    "system_warnings": {
+        "ram_warning": 90,
+        "storage_warning": 90
+    }
 }

@@ -4,6 +4,10 @@ import json
 import requests
 import socket
 from datetime import datetime
+import psutil  # Add to imports
+import os
+from PIL import Image
+
 try:
     from env import OPENWEATHER_API_KEY, CITY_NAME
     from update_config import update_config
@@ -21,6 +25,11 @@ with open("config.json") as config_file:
     # Override API key and city from env.py
     config["api_key"] = OPENWEATHER_API_KEY
     config["city"] = CITY_NAME
+
+# After loading config
+if not validate_config(config):
+    print("Error: Invalid configuration")
+    exit(1)
 
 # Initialize Pygame
 pygame.init()
@@ -52,10 +61,17 @@ def display_text(text, font, color, position):
     surface = font.render(filtered_text, True, color)
     screen.blit(surface, position)
 
-# Function to show current time and date
+# Add clock style support
 def show_time_and_date():
     now = datetime.now()
-    time_text = now.strftime("%H:%M:%S")
+    clock_style = config.get("clock_style", "24h")
+    clock_format = config.get("clock_format", "HH:MM:SS")
+    
+    if clock_style == "12h":
+        time_text = now.strftime("%I:%M:%S %p")
+    else:
+        time_text = now.strftime("%H:%M:%S")
+    
     date_text = now.strftime("%A, %B %d, %Y")
     display_text(time_text, font, WHITE, (50, 50))
     if config["show_date"]:
@@ -94,10 +110,14 @@ def show_weather():
         if weather_data:
             temp = weather_data["main"]["temp"]
             weather_desc = weather_data["weather"][0]["description"]
+            weather_code = weather_data["weather"][0]["icon"]
             
             # Show weather info
             weather_text = f"{temp}°C, {weather_desc.capitalize()}"
             display_text(weather_text, small_font, WHITE, (50, 250))
+            
+            # Show weather icon
+            show_weather_icon(weather_code, (300, 250))
             
             # Show location if enabled
             if config.get("show_location", False):
@@ -108,15 +128,40 @@ def show_weather():
             if config.get("show_location", False):
                 display_text(f"Location: {config['city']}", small_font, WHITE, (50, 280))
 
-# Function to show Wi-Fi status and IP address
+# Function to show weather icon
+def show_weather_icon(weather_code, position):
+    try:
+        # OpenWeatherMap icon URL
+        icon_url = f"http://openweathermap.org/img/wn/{weather_code}@2x.png"
+        response = requests.get(icon_url, timeout=5)  # Add timeout
+        if response.status_code == 200:
+            # Save temporarily and load with pygame
+            with open("temp_icon.png", "wb") as f:
+                f.write(response.content)
+            
+            icon = pygame.image.load("temp_icon.png")
+            icon = pygame.transform.scale(icon, (50, 50))
+            screen.blit(icon, position)
+            
+            # Clean up temporary file
+            os.remove("temp_icon.png")
+    except requests.RequestException as e:
+        print(f"Weather icon download error: {str(e)}")
+    except Exception as e:
+        print(f"Error loading weather icon: {str(e)}")
+
+# Add better network error handling
 def show_network_info():
     if config["show_wifi_status"]:
         try:
-            ssid = "N/A"
-            ip = requests.get("https://api.ipify.org").text
+            ip = requests.get("https://api.ipify.org", timeout=5).text
             display_text(f"IP: {ip}", small_font, WHITE, (50, 300))
-        except:
+        except requests.RequestException as e:
+            print(f"Network error: {str(e)}")
             display_text("Network Error", small_font, RED, (50, 300))
+        except Exception as e:
+            print(f"Unexpected error: {str(e)}")
+            display_text("Error", small_font, RED, (50, 300))
 
 # Function to show custom message from a file
 def show_custom_message():
@@ -136,15 +181,43 @@ def show_custom_message():
         except Exception as e:
             display_text(f"Error: {str(e)}", small_font, RED, (50, 350))
 
-# Function to show system info like CPU temperature
+# Function to show system info like CPU temperature, RAM, and storage usage
 def show_system_info():
-    if config["show_cpu_temp"]:
+    if config["show_system_info"]:
         try:
-            with open("/sys/class/thermal/thermal_zone0/temp", "r") as temp_file:
-                cpu_temp = float(temp_file.read()) / 1000
-            display_text(f"CPU Temp: {cpu_temp:.1f}°C", small_font, WHITE, (50, 400))
-        except:
-            display_text("Error Reading CPU Temp", small_font, RED, (50, 400))
+            # RAM Usage with warning threshold
+            ram = psutil.virtual_memory()
+            ram_percent = ram.percent
+            ram_warning = config.get("system_warnings", {}).get("ram_warning", 90)
+            ram_color = RED if ram_percent > ram_warning else WHITE
+            
+            # Storage with warning threshold
+            disk = psutil.disk_usage('/')
+            disk_percent = disk.percent
+            storage_warning = config.get("system_warnings", {}).get("storage_warning", 90)
+            storage_color = RED if disk_percent > storage_warning else WHITE
+            
+            # Display with warning colors
+            display_text(f"RAM: {ram_percent}%", small_font, ram_color, (50, 430))
+            display_text(f"Storage: {disk_percent}%", small_font, storage_color, (50, 460))
+        except Exception as e:
+            print(f"Error showing system info: {str(e)}")
+            display_text("Error Reading System Info", small_font, RED, (50, 400))
+
+# Function to scroll text if it exceeds a certain width
+def scroll_text(text, font, color, position, max_width=300):
+    if not hasattr(scroll_text, "offset"):
+        scroll_text.offset = 0
+        
+    if config.get("text_effects", {}).get("scroll_long_text", False):
+        surface = font.render(text, True, color)
+        if surface.get_width() > max_width:
+            scroll_text.offset = (scroll_text.offset + 1) % surface.get_width()
+            screen.blit(surface, (position[0] - scroll_text.offset, position[1]))
+        else:
+            screen.blit(surface, position)
+    else:
+        display_text(text, font, color, position)
 
 # Function to update the display
 def update_display():
@@ -165,7 +238,7 @@ def update_display():
         show_network_info()
     if config["show_custom_message"]:
         show_custom_message()
-    if config["show_cpu_temp"]:
+    if config["show_cpu_temp"] or config["show_system_info"]:
         show_system_info()
 
     pygame.display.update()
