@@ -1,87 +1,136 @@
-# DashPiX – Universal Smart Display for Raspberry Pi
+## DashPiX – Universal Smart Display for Raspberry Pi
 
 **DashPiX** is a free and open-source smart dashboard designed for the Raspberry Pi. It displays real-time **time**, **weather**, and **notifications** on any HDMI screen, making it ideal for homes, schools, offices, or public spaces like villages and community halls.
 
 ---
 
-## ✨ Features
-- 🕒 Fullscreen clock with live time updates
-- ☀️ Weather data from OpenWeatherMap with icon support
-- 🔔 Modular notifications (upcoming)
-- 🌐 Lightweight, runs on any Raspberry Pi model with HDMI
-- 🌟 Minimal setup and fully customizable
+### ✨ Features
+- 🕰️ Fullscreen clock with live time updates
+- 🌤️ Weather data from OpenWeatherMap with icon support
+- 📅 Current date and day of the week
+- 🎉 Time-based greeting (Good Morning, Good Afternoon, Good Evening)
+- 💬 Custom message support (displayed from a `message.txt` file)
+- 📶 Wi-Fi status and IP address display
+- 🌡️ CPU temperature display (Raspberry Pi monitoring)
+- 🔧 Easily configurable via `config.json`
 
 ---
 
-## 📚 How It Works
-DashPiX runs a Python script using `pygame` to draw fullscreen widgets on your display. The data (time, weather) is fetched live from the internet. Icons and fonts are rendered cleanly for easy reading from a distance.
+### 📦 Requirements
+- Raspberry Pi with HDMI output
+- Python 3
+- Pygame, Requests, Pillow
 
 ---
 
-## 📂 Installation
+### 🛠️ Installation
 
-### 1. Install Dependencies
-```bash
-sudo apt update && sudo apt install python3-pip
-pip3 install pygame requests pillow
-```
+1. **Install Dependencies**:
+   ```bash
+   sudo apt update && sudo apt install python3-pip
+   pip3 install pygame requests pillow
+   ```
 
-### 2. Clone the Repository
-```bash
-git clone https://github.com/ProgrammerNomad/DashPiX.git
-cd DashPiX
-```
+2. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/ProgrammerNomad/DashPiX.git
+   cd DashPiX
+   ```
 
-### 3. Set Your API Key and City
-Edit `display.py`:
-```python
-API_KEY = 'your_openweathermap_api_key'
-CITY = 'YourCityName'
-```
+3. **Set Up `config.json`**:
+   Open the `config.json` file and fill in your **OpenWeatherMap API key** and **city name**. You can also enable or disable features by toggling the boolean values (`true` or `false`).
 
-### 4. Run It
-```bash
-python3 display.py
-```
+   Example:
+   ```json
+   {
+     "api_key": "your_openweathermap_api_key",
+     "city": "YourCityName",
+     "show_time": true,
+     "show_date": true,
+     "show_greeting": true,
+     "show_weather": true,
+     "show_location": true,
+     "show_news": false,
+     "show_wifi_status": false,
+     "show_ip_address": false,
+     "show_custom_message": true,
+     "show_events": false,
+     "show_cpu_temp": false,
+     "background_style": "light"
+   }
+   ```
 
-### 5. Optional: Run on Boot
-```bash
-crontab -e
-```
-Add this line:
-```
-@reboot python3 /home/pi/DashPiX/display.py
-```
+4. **Create `message.txt`** (optional):
+   - You can create a file named `message.txt` in the same directory as `display.py`.
+   - Write custom messages that you want to display. For example:
+     ```txt
+     📢 Community Announcement!
+
+     🌟 Join us for the Village Festival this weekend!
+     🗓 Date: May 5, 2025
+     📍 Location: Village Square
+
+     🎉 Free Entry | Food, Music & Fun!
+
+     For more details, visit www.villagefestival.com
+     ```
+
+5. **Run It**:
+   ```bash
+   python3 display.py
+   ```
+
+6. **Optional: Run on Boot**:
+   To run the display on boot, add the following line to your crontab:
+   ```bash
+   crontab -e
+   ```
+   Then add this line:
+   ```bash
+   @reboot python3 /home/pi/DashPiX/display.py
+   ```
 
 ---
 
-## 🚀 Coming Soon
-- Notification system (email, local files, MQTT)
+### 📱 Customization
+You can toggle or change the display settings at any time by editing the `config.json` file. Here’s a breakdown of the settings:
+
+- **api_key**: Your OpenWeatherMap API key for weather data.
+- **city**: The city for which you want weather information.
+- **show_time**: Set to `true` to display the time.
+- **show_date**: Set to `true` to display the current date.
+- **show_greeting**: Set to `true` to display a greeting based on the time of day.
+- **show_weather**: Set to `true` to display weather information.
+- **show_location**: Set to `true` to display the current city and weather description.
+- **show_news**: Set to `true` to show news headlines (RSS feed).
+- **show_wifi_status**: Set to `true` to show Wi-Fi status.
+- **show_ip_address**: Set to `true` to display the IP address.
+- **show_custom_message**: Set to `true` to display a message from the `message.txt` file.
+- **show_events**: Set to `true` to show upcoming events (manual configuration).
+- **show_cpu_temp**: Set to `true` to show the CPU temperature of the Raspberry Pi.
+- **background_style**: Set to `light` or `dark` to choose the background style.
+
+---
+
+### 🚀 Coming Soon
+- RSS Feed-based news
 - Local sensor integration (temperature, humidity)
 - Calendar or prayer times
-- Theming support
+- Enhanced theming support
 
 ---
 
-## 📍 Use Cases
-- Smart home clock and weather panel
-- Village/community information screen
-- Office entrance display
-- School or temple digital notice board
-
----
-
-## 👤 Contributors
+### 🧑‍💻 Contributors
 Made with ❤️ by [@ProgrammerNomad](https://github.com/ProgrammerNomad)
 
 ---
 
-## 📄 License
+### 📜 License
 This project is licensed under the **MIT License**. You can use, modify, and distribute it freely.
 
 ---
 
-## 🔗 Related Projects & Inspiration
+### 🔗 Related Projects & Inspiration
 - OpenWeatherMap API
 - Raspberry Pi digital signage projects
 
@@ -90,3 +139,5 @@ This project is licensed under the **MIT License**. You can use, modify, and dis
 ---
 
 **Let the world see more, with less.** — DashPiX
+
+---
