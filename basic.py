@@ -25,10 +25,10 @@ pygame.init()
 
 # Screen settings - Fullscreen
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-pygame.display.set_caption("DashPiX")
+pygame.display.set_caption("DashPiX Basic")
 
 # Update fonts for better hierarchy
-title_font = pygame.font.SysFont("Arial", 50)  # Biggest for title
+title_font = pygame.font.SysFont("Arial", 40)  # Biggest for title
 main_font = pygame.font.SysFont("Arial", 120)   # Large for time
 sub_font = pygame.font.SysFont("Arial", 60)     # Medium for other items
 
@@ -57,7 +57,7 @@ def show_time_and_date():
     now = datetime.now()
     
     # Title
-    center_text("DashPiX", title_font, WHITE, 50)
+    center_text("DashPiX", title_font, WHITE, 40)
     
     # Time based on config
     if config.get("clock_style", "24h") == "12h":
