@@ -78,7 +78,7 @@ def show_weather():
     global last_weather_update, weather_data
     if config["show_weather"]:
         current_time = time()
-        update_frequency = config.get("weather_update_frequency", 60)  # Default 60 seconds
+        update_frequency = config.get("weather_update_frequency", 600)  # Default 10 minutes
         
         # Update weather data if enough time has passed
         if current_time - last_weather_update >= update_frequency:

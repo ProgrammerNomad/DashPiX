@@ -12,5 +12,5 @@
     "show_events": false,
     "show_cpu_temp": false,
     "background_style": "dark",
-    "weather_update_frequency": 60
+    "weather_update_frequency": 600
 }
