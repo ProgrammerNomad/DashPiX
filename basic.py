@@ -28,8 +28,8 @@ screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption("DashPiX Basic")
 
 # Update fonts for better hierarchy
-title_font = pygame.font.SysFont("Arial", 40)  # Biggest for title
-main_font = pygame.font.SysFont("Arial", 120)   # Large for time
+title_font = pygame.font.SysFont("Arial", 140, bold=True)  # Large title
+main_font = pygame.font.SysFont("Arial", 180, bold=True)   # Extra large bold time
 sub_font = pygame.font.SysFont("Arial", 60)     # Medium for other items
 
 # Colors
@@ -56,19 +56,19 @@ def center_text(text, font, color, y_position):
 def show_time_and_date():
     now = datetime.now()
     
-    # Title
-    center_text("DashPiX", title_font, WHITE, 40)
+    # Title with spacing
+    center_text("DashPiX", title_font, WHITE, 50)
     
-    # Time based on config
+    # Time based on config with increased spacing
     if config.get("clock_style", "24h") == "12h":
         time_text = now.strftime("%I:%M:%S %p")
     else:
         time_text = now.strftime("%H:%M:%S")
-    center_text(time_text, main_font, WHITE, 180)
+    center_text(time_text, main_font, WHITE, 250)  # Increased Y position for more space
     
-    # Date
+    # Date with consistent spacing
     date_text = now.strftime("%A, %B %d, %Y")
-    center_text(date_text, sub_font, WHITE, 300)
+    center_text(date_text, sub_font, WHITE, 450)  # Increased spacing after time
 
 def show_greeting():
     now = datetime.now()
@@ -79,7 +79,7 @@ def show_greeting():
         greeting = "Good Afternoon!"
     else:
         greeting = "Good Evening!"
-    center_text(greeting, sub_font, WHITE, 400)
+    center_text(greeting, sub_font, WHITE, 550)  # Adjusted for new spacing
 
 def show_weather():
     global last_weather_update, weather_data
@@ -99,9 +99,9 @@ def show_weather():
         weather_desc = weather_data["weather"][0]["description"]
         # Combine location, symbol, and weather in one line
         weather_text = f"{CITY_NAME} — {temp}°C, {weather_desc.capitalize()}"
-        center_text(weather_text, sub_font, WHITE, 500)
+        center_text(weather_text, sub_font, WHITE, 650)  # Adjusted for new spacing
     else:
-        center_text(f"{CITY_NAME} — Weather Info Unavailable", sub_font, RED, 500)
+        center_text(f"{CITY_NAME} — Weather Info Unavailable", sub_font, RED, 650)
 
 def update_display():
     screen.fill(DARK_GREY)
