@@ -1,26 +1,34 @@
 ## DashPiX – Universal Smart Display for Raspberry Pi
 
-**DashPiX** is a free and open-source smart dashboard designed for the Raspberry Pi. It displays real-time **time**, **weather**, and **notifications** on any HDMI screen, making it ideal for homes, schools, offices, or public spaces like villages and community halls.
+**DashPiX** is a free and open-source smart dashboard designed for the Raspberry Pi. It offers both a full-featured display (`display.py`) and a simplified basic version (`basic.py`) for different use cases.
 
 ---
 
 ### ✨ Features
-- 🕰️ Fullscreen clock with live time updates
-- 🌤️ Weather data from OpenWeatherMap with icon support
-- 📅 Current date and day of the week
-- 🎉 Time-based greeting (Good Morning, Good Afternoon, Good Evening)
-- 💬 Custom message support (displayed from a `message.txt` file)
-- 📶 Wi-Fi status and IP address display
-- 🌡️ CPU temperature display (Raspberry Pi monitoring)
-- 🔧 Easily configurable via `config.json`
+
+#### Full Version (display.py)
+- 🕰️ Fullscreen clock with live time updates (12/24h format)
+- 🌤️ Weather data from OpenWeatherMap
+- 📅 Current date and calendar display
+- 🎉 Time-based greeting
+- 💬 Custom message support
+- 📊 System monitoring (RAM, Storage)
+- 🎨 Dark/Light mode support
 - ⌨️ Simple exit with Escape key
+
+#### Basic Version (basic.py)
+- 🕰️ Large centered clock display
+- 📅 Centered date display
+- 👋 Centered greeting
+- 🌤️ Single-line weather with location
+- 🎨 Clean, minimal interface
 
 ---
 
 ### 📦 Requirements
 - Raspberry Pi with HDMI output
 - Python 3
-- Pygame, Requests, Pillow
+- Pygame, Requests, Pillow, psutil
 
 ---
 
@@ -29,7 +37,7 @@
 1. **Install Dependencies**:
    ```bash
    sudo apt update && sudo apt install python3-pip
-   pip3 install pygame requests pillow
+   pip3 install pygame requests pillow psutil
    ```
 
 2. **Clone the Repository**:
@@ -49,7 +57,7 @@
    ```
 
 4. **Configure Display Settings**:
-   Edit the `config.json` file to enable or disable features by toggling the boolean values:
+   Edit the `config.json` file:
    ```json
    {
      "show_time": true,
@@ -57,17 +65,28 @@
      "show_greeting": true,
      "show_weather": true,
      "show_location": true,
-     "show_news": false,
-     "show_wifi_status": false,
-     "show_ip_address": false,
-     "show_custom_message": true,
-     "show_events": false,
-     "show_cpu_temp": false,
-     "background_style": "light"
+     "show_system_info": true,
+     "clock_style": "24h",
+     "background_style": "dark",
+     "weather_update_frequency": 600,
+     "system_warnings": {
+       "ram_warning": 90,
+       "storage_warning": 90
+     }
    }
    ```
 
-5. **Create `message.txt`** (optional):
+5. **Run the Display**:
+   For full version:
+   ```bash
+   python3 display.py
+   ```
+   For basic version:
+   ```bash
+   python3 basic.py
+   ```
+
+6. **Create `message.txt`** (optional):
    - You can create a file named `message.txt` in the same directory as `display.py`.
    - Write custom messages that you want to display. For example:
      ```txt
@@ -82,14 +101,6 @@
      For more details, visit www.villagefestival.com
      ```
 
-6. **Run It**:
-   ```bash
-   python3 display.py
-   ```
-   To exit the application:
-   - Press `Esc` key to close the display
-   - Or use `Ctrl+C` in the terminal
-   
 7. **Optional: Run on Boot**:
    To run the display on boot, add the following line to your crontab:
    ```bash
@@ -172,12 +183,10 @@ You can toggle or change the display settings at any time by editing the `config
 - **show_greeting**: Set to `true` to display a greeting based on the time of day.
 - **show_weather**: Set to `true` to display weather information.
 - **show_location**: Set to `true` to display the current city and weather description.
-- **show_news**: Set to `true` to show news headlines (RSS feed).
-- **show_wifi_status**: Set to `true` to show Wi-Fi status.
-- **show_ip_address**: Set to `true` to display the IP address.
-- **show_custom_message**: Set to `true` to display a message from the `message.txt` file.
-- **show_events**: Set to `true` to show upcoming events (manual configuration).
-- **show_cpu_temp**: Set to `true` to show the CPU temperature of the Raspberry Pi.
+- **show_system_info**: Set to `true` to display system monitoring information (RAM, Storage).
+- **clock_style**: Choose between "12h" or "24h" format.
+- **weather_update_frequency**: Set weather update interval in seconds (default: 600).
+- **system_warnings**: Configure warning thresholds for RAM and storage.
 - **background_style**: Set to `light` or `dark` to choose the background style.
 
 > Note: OpenWeatherMap API key and city name are now configured in `env.py` for better security.
