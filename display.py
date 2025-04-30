@@ -7,6 +7,7 @@ from datetime import datetime
 import psutil  # Add to imports
 import os
 from PIL import Image
+import calendar
 
 try:
     from env import OPENWEATHER_API_KEY, CITY_NAME
@@ -53,6 +54,7 @@ RED = (255, 0, 0)
 # Add after other global variables
 last_weather_update = 0
 weather_data = None
+calendar.setfirstweekday(calendar.MONDAY)  # Start week from Monday
 
 # Function to display text
 def display_text(text, font, color, position):
@@ -219,6 +221,36 @@ def scroll_text(text, font, color, position, max_width=300):
     else:
         display_text(text, font, color, position)
 
+# Add new function for calendar display
+def show_calendar():
+    now = datetime.now()
+    cal = calendar.monthcalendar(now.year, now.month)
+    month_name = now.strftime("%B %Y")
+    
+    # Get screen dimensions
+    screen_width = screen.get_width()
+    
+    # Calendar position (right side)
+    cal_x = screen_width - 400  # 400 pixels from right edge
+    cal_y = 50  # Same top alignment as time
+    
+    # Display month name
+    display_text(month_name, font, WHITE, (cal_x, cal_y))
+    
+    # Display weekday headers
+    weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    for i, day in enumerate(weekdays):
+        display_text(day, small_font, GREY, (cal_x + i*50, cal_y + 60))
+    
+    # Display calendar days
+    for week_num, week in enumerate(cal):
+        for day_num, day in enumerate(week):
+            if day != 0:
+                # Highlight current day
+                color = RED if day == now.day else WHITE
+                display_text(str(day), small_font, color, 
+                           (cal_x + day_num*50, cal_y + 90 + week_num*30))
+
 # Function to update the display
 def update_display():
     # Set background color based on config
@@ -227,13 +259,18 @@ def update_display():
     else:
         screen.fill(BLACK)
     
-    # Show features based on config
+    # Left side content (existing features)
     if config["show_greeting"]:
         show_greeting()
     if config["show_time"]:
         show_time_and_date()
     if config["show_weather"]:
         show_weather()
+        
+    # Right side content (calendar)
+    show_calendar()
+    
+    # Bottom half content (hardware info)
     if config["show_network_info"]:
         show_network_info()
     if config["show_custom_message"]:

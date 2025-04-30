@@ -11,9 +11,10 @@
     "show_custom_message": false,
     "show_events": false,
     "show_cpu_temp": false,
+    "show_system_info": false,
     "background_style": "dark",
     "weather_update_frequency": 600,
-    "show_system_info": false,
+    "show_calendar": true,
     "clock_style": "24h",
     "clock_format": "HH:MM:SS",
     "text_effects": {
