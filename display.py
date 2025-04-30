@@ -4,10 +4,18 @@ import json
 import requests
 import socket
 from datetime import datetime
+try:
+    from env import OPENWEATHER_API_KEY, CITY_NAME
+except ImportError:
+    print("Please create env.py file from env.example.py template")
+    exit(1)
 
 # Load the configuration
 with open("config.json") as config_file:
     config = json.load(config_file)
+    # Override API key and city from env.py
+    config["api_key"] = OPENWEATHER_API_KEY
+    config["city"] = CITY_NAME
 
 # Initialize Pygame
 pygame.init()

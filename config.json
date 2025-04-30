@@ -1,6 +1,4 @@
 {
-    "api_key": "your_openweathermap_api_key",
-    "city": "YourCityName", 
     "show_time": true,
     "show_date": true,
     "show_greeting": true,

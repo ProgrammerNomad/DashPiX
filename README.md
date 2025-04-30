@@ -37,14 +37,21 @@
    cd DashPiX
    ```
 
-3. **Set Up `config.json`**:
-   Open the `config.json` file and fill in your **OpenWeatherMap API key** and **city name**. You can also enable or disable features by toggling the boolean values (`true` or `false`).
+3. **Set Up Environment Variables**:
+   - Copy `env.example.py` to `env.py`:
+     ```bash
+     cp env.example.py env.py
+     ```
+   - Edit `env.py` and add your OpenWeatherMap API key and city name:
+     ```python
+     OPENWEATHER_API_KEY = "your_openweathermap_api_key"
+     CITY_NAME = "YourCityName"
+     ```
 
-   Example:
+4. **Configure Display Settings**:
+   Edit the `config.json` file to enable or disable features by toggling the boolean values:
    ```json
    {
-     "api_key": "your_openweathermap_api_key",
-     "city": "YourCityName",
      "show_time": true,
      "show_date": true,
      "show_greeting": true,
@@ -60,7 +67,7 @@
    }
    ```
 
-4. **Create `message.txt`** (optional):
+5. **Create `message.txt`** (optional):
    - You can create a file named `message.txt` in the same directory as `display.py`.
    - Write custom messages that you want to display. For example:
      ```txt
@@ -75,12 +82,12 @@
      For more details, visit www.villagefestival.com
      ```
 
-5. **Run It**:
+6. **Run It**:
    ```bash
    python3 display.py
    ```
 
-6. **Optional: Run on Boot**:
+7. **Optional: Run on Boot**:
    To run the display on boot, add the following line to your crontab:
    ```bash
    crontab -e
@@ -141,3 +148,4 @@ This project is licensed under the **MIT License**. You can use, modify, and dis
 **Let the world see more, with less.** — DashPiX
 
 ---
+````
