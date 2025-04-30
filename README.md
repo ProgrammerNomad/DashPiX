@@ -108,9 +108,10 @@
 
 To update your local DashPiX installation while preserving your settings:
 
-1. **Backup your environment file**:
+1. **Backup your configuration files**:
    ```bash
    cp env.py env.backup.py
+   cp config.json config.backup.json
    ```
 
 2. **Pull the latest changes**:
@@ -121,20 +122,24 @@ To update your local DashPiX installation while preserving your settings:
    git stash pop    # Restore local changes if needed
    ```
 
-3. **Check for environment changes**:
+3. **Restore your configuration**:
    ```bash
-   diff env.example.py env.py
+   cp env.backup.py env.py
+   cp config.backup.json config.json
    ```
-   If there are new environment variables, add them to your `env.py` file.
 
-4. **Update configuration**:
-   Compare your `config.json` with any new options:
+4. **Check for new configuration options**:
    ```bash
-   git diff config.json
+   # Compare example files with your backups
+   diff env.example.py env.backup.py
+   diff config.json.example config.backup.json
    ```
-   Add any new configuration options while keeping your existing settings.
+   If there are new options, manually add them to your restored configuration files.
 
-> Note: Always check the changelog or release notes for breaking changes before updating.
+> Note: 
+> - Always check the changelog or release notes for breaking changes before updating
+> - Keep your backup files until you confirm everything works correctly
+> - Never commit your personal `env.py` and `config.json` to git
 
 ---
 
@@ -187,3 +192,4 @@ This project is licensed under the **MIT License**. You can use, modify, and dis
 **Let the world see more, with less.** — DashPiX
 
 ---
+````
