@@ -7,11 +7,11 @@
     "show_weather": true,
     "show_location": true,
     "show_news": false,
+    "show_network_info": false,
     "show_wifi_status": false,
     "show_ip_address": false,
     "show_custom_message": true,
     "show_events": false,
     "show_cpu_temp": false,
     "background_style": "light"
-  }
-  
+}
