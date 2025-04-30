@@ -13,6 +13,7 @@
 - 📶 Wi-Fi status and IP address display
 - 🌡️ CPU temperature display (Raspberry Pi monitoring)
 - 🔧 Easily configurable via `config.json`
+- ⌨️ Simple exit with Escape key
 
 ---
 
@@ -86,7 +87,10 @@
    ```bash
    python3 display.py
    ```
-
+   To exit the application:
+   - Press `Esc` key to close the display
+   - Or use `Ctrl+C` in the terminal
+   
 7. **Optional: Run on Boot**:
    To run the display on boot, add the following line to your crontab:
    ```bash
@@ -96,6 +100,7 @@
    ```bash
    @reboot python3 /home/pi/DashPiX/display.py
    ```
+   > Note: When running on boot, you can still exit using the `Esc` key.
 
 ---
 
