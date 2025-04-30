@@ -39,6 +39,17 @@ pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption("DashPiX")
 
+# Add after screen settings
+def get_quarter_positions():
+    width = screen.get_width()
+    height = screen.get_height()
+    return {
+        'top_left': (50, 50),  # Quarter 1: Time, weather, etc
+        'top_right': (width//2 + 50, 50),  # Quarter 2: Calendar
+        'bottom_left': (50, height//2 + 50),  # Quarter 3: Hardware info
+        'bottom_right': (width//2 + 50, height//2 + 50)  # Quarter 4: Future use
+    }
+
 # Set font
 font = pygame.font.SysFont("Arial", 50)
 small_font = pygame.font.SysFont("Arial", 30)
@@ -63,11 +74,11 @@ def display_text(text, font, color, position):
     surface = font.render(filtered_text, True, color)
     screen.blit(surface, position)
 
-# Add clock style support
+# Update show_time_and_date function
 def show_time_and_date():
     now = datetime.now()
+    pos = get_quarter_positions()['top_left']
     clock_style = config.get("clock_style", "24h")
-    clock_format = config.get("clock_format", "HH:MM:SS")
     
     if clock_style == "12h":
         time_text = now.strftime("%I:%M:%S %p")
@@ -75,12 +86,13 @@ def show_time_and_date():
         time_text = now.strftime("%H:%M:%S")
     
     date_text = now.strftime("%A, %B %d, %Y")
-    display_text(time_text, font, WHITE, (50, 50))
+    display_text(time_text, font, WHITE, pos)
     if config["show_date"]:
-        display_text(date_text, small_font, WHITE, (50, 120))
+        display_text(date_text, small_font, WHITE, (pos[0], pos[1] + 70))
 
-# Function to show greeting based on time of day
+# Update show_greeting function
 def show_greeting():
+    pos = get_quarter_positions()['top_left']
     now = datetime.now()
     hour = now.hour
     if hour < 12:
@@ -89,11 +101,12 @@ def show_greeting():
         greeting = "Good Afternoon!"
     else:
         greeting = "Good Evening!"
-    display_text(greeting, small_font, WHITE, (50, 180))
+    display_text(greeting, small_font, WHITE, (pos[0], pos[1] + 130))
 
 # Update the show_weather function
 def show_weather():
     global last_weather_update, weather_data
+    pos = get_quarter_positions()['top_left']
     if config["show_weather"]:
         current_time = time()
         update_frequency = config.get("weather_update_frequency", 600)  # Default 10 minutes
@@ -116,19 +129,19 @@ def show_weather():
             
             # Show weather info
             weather_text = f"{temp}°C, {weather_desc.capitalize()}"
-            display_text(weather_text, small_font, WHITE, (50, 250))
+            display_text(weather_text, small_font, WHITE, (pos[0], pos[1] + 200))
             
             # Show weather icon
-            show_weather_icon(weather_code, (300, 250))
+            show_weather_icon(weather_code, (pos[0] + 250, pos[1] + 200))
             
             # Show location if enabled
             if config.get("show_location", False):
                 location_text = f"Location: {config['city']}"
-                display_text(location_text, small_font, WHITE, (50, 280))
+                display_text(location_text, small_font, WHITE, (pos[0], pos[1] + 230))
         else:
-            display_text("Weather Info Unavailable", small_font, RED, (50, 250))
+            display_text("Weather Info Unavailable", small_font, RED, (pos[0], pos[1] + 200))
             if config.get("show_location", False):
-                display_text(f"Location: {config['city']}", small_font, WHITE, (50, 280))
+                display_text(f"Location: {config['city']}", small_font, WHITE, (pos[0], pos[1] + 230))
 
 # Function to show weather icon
 def show_weather_icon(weather_code, position):
@@ -183,28 +196,29 @@ def show_custom_message():
         except Exception as e:
             display_text(f"Error: {str(e)}", small_font, RED, (50, 350))
 
-# Function to show system info like CPU temperature, RAM, and storage usage
+# Update system info display
 def show_system_info():
     if config["show_system_info"]:
+        pos = get_quarter_positions()['bottom_left']
         try:
-            # RAM Usage with warning threshold
+            # RAM Usage
             ram = psutil.virtual_memory()
             ram_percent = ram.percent
             ram_warning = config.get("system_warnings", {}).get("ram_warning", 90)
             ram_color = RED if ram_percent > ram_warning else WHITE
             
-            # Storage with warning threshold
+            # Storage
             disk = psutil.disk_usage('/')
             disk_percent = disk.percent
             storage_warning = config.get("system_warnings", {}).get("storage_warning", 90)
             storage_color = RED if disk_percent > storage_warning else WHITE
             
-            # Display with warning colors
-            display_text(f"RAM: {ram_percent}%", small_font, ram_color, (50, 430))
-            display_text(f"Storage: {disk_percent}%", small_font, storage_color, (50, 460))
+            # Display with new positions
+            display_text(f"RAM: {ram_percent}%", small_font, ram_color, pos)
+            display_text(f"Storage: {disk_percent}%", small_font, storage_color, 
+                        (pos[0], pos[1] + 30))
         except Exception as e:
-            print(f"Error showing system info: {str(e)}")
-            display_text("Error Reading System Info", small_font, RED, (50, 400))
+            display_text("Error Reading System Info", small_font, RED, pos)
 
 # Function to scroll text if it exceeds a certain width
 def scroll_text(text, font, color, position, max_width=300):
@@ -221,35 +235,28 @@ def scroll_text(text, font, color, position, max_width=300):
     else:
         display_text(text, font, color, position)
 
-# Add new function for calendar display
+# Update show_calendar function
 def show_calendar():
+    pos = get_quarter_positions()['top_right']
     now = datetime.now()
     cal = calendar.monthcalendar(now.year, now.month)
     month_name = now.strftime("%B %Y")
     
-    # Get screen dimensions
-    screen_width = screen.get_width()
-    
-    # Calendar position (right side)
-    cal_x = screen_width - 400  # 400 pixels from right edge
-    cal_y = 50  # Same top alignment as time
-    
     # Display month name
-    display_text(month_name, font, WHITE, (cal_x, cal_y))
+    display_text(month_name, font, WHITE, pos)
     
     # Display weekday headers
     weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     for i, day in enumerate(weekdays):
-        display_text(day, small_font, GREY, (cal_x + i*50, cal_y + 60))
+        display_text(day, small_font, GREY, (pos[0] + i*50, pos[1] + 60))
     
     # Display calendar days
     for week_num, week in enumerate(cal):
         for day_num, day in enumerate(week):
             if day != 0:
-                # Highlight current day
                 color = RED if day == now.day else WHITE
                 display_text(str(day), small_font, color, 
-                           (cal_x + day_num*50, cal_y + 90 + week_num*30))
+                           (pos[0] + day_num*50, pos[1] + 90 + week_num*30))
 
 # Function to update the display
 def update_display():
