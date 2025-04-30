@@ -136,7 +136,7 @@ To update your local DashPiX installation while preserving your settings:
 
 3. **Pull the latest changes**:
    ```bash
-   git pull origin master
+   git pull origin main
    ```
 
 4. **Restore your configuration**:
@@ -218,3 +218,4 @@ This project is licensed under the **MIT License**. You can use, modify, and dis
 **Let the world see more, with less.** — DashPiX
 
 ---
+````
