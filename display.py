@@ -1,10 +1,9 @@
 import pygame
-import time
+from time import time, sleep  # Import specific functions from time
 import json
 import requests
 import socket
 from datetime import datetime
-from time import time
 try:
     from env import OPENWEATHER_API_KEY, CITY_NAME
     from update_config import update_config
@@ -174,6 +173,6 @@ while running:
                 running = False
 
     update_display()
-    time.sleep(1)
+    sleep(1)  # Use sleep() directly
 
 pygame.quit()
