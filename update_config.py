@@ -3,14 +3,25 @@ import json
 def update_config():
     try:
         # Read the example config
-        with open("config.json.example", "r") as example_file:
-            example_config = json.load(example_file)
+        try:
+            with open("config.json.example", "r") as example_file:
+                example_config = json.load(example_file)
+        except json.JSONDecodeError as e:
+            print(f"Error reading config.json.example: Invalid JSON format")
+            print(f"Details: {str(e)}")
+            return
+        except FileNotFoundError:
+            print("config.json.example not found")
+            return
         
         # Read the current config
         try:
             with open("config.json", "r") as config_file:
                 current_config = json.load(config_file)
         except FileNotFoundError:
+            current_config = {}
+        except json.JSONDecodeError:
+            print("Warning: Invalid config.json, creating new one")
             current_config = {}
         
         # Merge new options while preserving existing values
@@ -24,7 +35,6 @@ def update_config():
         # Save the updated config
         if updated:
             with open("config.json", "w") as config_file:
-                # Fix: Remove the extra json.dumps call
                 json.dump(current_config, config_file, indent=4)
             print("Configuration updated successfully!")
         else:
