@@ -4,6 +4,8 @@ import json
 import requests
 from datetime import datetime
 import os
+from PIL import Image
+from io import BytesIO
 
 try:
     from env import OPENWEATHER_API_KEY, CITY_NAME
@@ -81,6 +83,25 @@ def show_greeting():
         greeting = "Good Evening!"
     center_text(greeting, sub_font, WHITE, 550)  # Adjusted for new spacing
 
+def get_weather_icon(icon_code, size=(50, 50)):
+    try:
+        url = f"http://openweathermap.org/img/wn/{icon_code}@2x.png"
+        response = requests.get(url)
+        if response.status_code == 200:
+            # Convert bytes to pygame image
+            image_data = BytesIO(response.content)
+            pil_image = Image.open(image_data)
+            pil_image = pil_image.resize(size)
+            mode = pil_image.mode
+            size = pil_image.size
+            data = pil_image.tobytes()
+            
+            py_image = pygame.image.fromstring(data, size, mode)
+            return py_image
+    except Exception as e:
+        print(f"Error loading weather icon: {e}")
+    return None
+
 def show_weather():
     global last_weather_update, weather_data
     current_time = time()
@@ -97,9 +118,43 @@ def show_weather():
     if weather_data:
         temp = weather_data["main"]["temp"]
         weather_desc = weather_data["weather"][0]["description"]
-        # Combine location, symbol, and weather in one line
-        weather_text = f"{CITY_NAME} — {temp}°C, {weather_desc.capitalize()}"
-        center_text(weather_text, sub_font, WHITE, 650)  # Adjusted for new spacing
+        icon_code = weather_data["weather"][0]["icon"]
+        
+        # Get screen width for centering
+        width = screen.get_width()
+        
+        # Create temperature text
+        temp_text = f"{CITY_NAME} - {temp}°C"
+        temp_surface = sub_font.render(temp_text, True, WHITE)
+        
+        # Create description text
+        desc_text = f", {weather_desc.capitalize()}"
+        desc_surface = sub_font.render(desc_text, True, WHITE)
+        
+        # Get weather icon
+        icon = get_weather_icon(icon_code)
+        
+        # Calculate total width for centering
+        total_width = temp_surface.get_width()
+        if icon:
+            total_width += icon.get_width() + 10  # 10px spacing
+        total_width += desc_surface.get_width()
+        
+        # Calculate starting x position for center alignment
+        x = (width - total_width) // 2
+        y = 650  # Keep existing y position
+        
+        # Draw temperature
+        screen.blit(temp_surface, (x, y))
+        x += temp_surface.get_width() + 5  # 5px spacing
+        
+        # Draw icon
+        if icon:
+            screen.blit(icon, (x, y))
+            x += icon.get_width() + 5  # 5px spacing
+        
+        # Draw description
+        screen.blit(desc_surface, (x, y))
     else:
         center_text(f"{CITY_NAME} — Weather Info Unavailable", sub_font, RED, 650)
 
