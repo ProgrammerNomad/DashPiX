@@ -242,21 +242,53 @@ def show_calendar():
     cal = calendar.monthcalendar(now.year, now.month)
     month_name = now.strftime("%B %Y")
     
-    # Display month name
-    display_text(month_name, font, WHITE, pos)
+    # Calculate available space
+    width = screen.get_width()
+    height = screen.get_height()
+    quarter_width = width//2 - 100  # Account for margins
+    quarter_height = height//2 - 100
+    
+    # Calculate cell sizes
+    num_cols = 7  # Days in week
+    num_rows = len(cal) + 2  # Weeks + header + month name
+    
+    cell_width = quarter_width // num_cols
+    cell_height = quarter_height // num_rows
+    
+    # Adjust font size to fit cells
+    calendar_font_size = min(cell_width//3, cell_height//2)
+    header_font_size = calendar_font_size + 10
+    month_font_size = header_font_size + 10
+    
+    calendar_font = pygame.font.SysFont("Arial", calendar_font_size)
+    header_font = pygame.font.SysFont("Arial", header_font_size)
+    month_font = pygame.font.SysFont("Arial", month_font_size)
+    
+    # Display month name centered
+    month_surface = month_font.render(month_name, True, WHITE)
+    month_pos = (pos[0] + (quarter_width - month_surface.get_width())//2, pos[1])
+    screen.blit(month_surface, month_pos)
     
     # Display weekday headers
     weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     for i, day in enumerate(weekdays):
-        display_text(day, small_font, GREY, (pos[0] + i*50, pos[1] + 60))
+        day_surface = header_font.render(day, True, GREY)
+        header_x = pos[0] + i * cell_width + (cell_width - day_surface.get_width())//2
+        header_y = pos[1] + cell_height
+        screen.blit(day_surface, (header_x, header_y))
     
     # Display calendar days
     for week_num, week in enumerate(cal):
         for day_num, day in enumerate(week):
             if day != 0:
                 color = RED if day == now.day else WHITE
-                display_text(str(day), small_font, color, 
-                           (pos[0] + day_num*50, pos[1] + 90 + week_num*30))
+                day_surface = calendar_font.render(str(day), True, color)
+                
+                # Center the day number in its cell
+                day_x = pos[0] + day_num * cell_width + (cell_width - day_surface.get_width())//2
+                day_y = pos[1] + (week_num + 2) * cell_height + (cell_height - day_surface.get_height())//2
+                
+                screen.blit(day_surface, (day_x, day_y))
 
 # Function to update the display
 def update_display():
