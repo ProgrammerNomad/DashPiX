@@ -24,7 +24,8 @@ def update_config():
         # Save the updated config
         if updated:
             with open("config.json", "w") as config_file:
-                json.dump(current_config, json.dumps(current_config, indent=4))
+                # Fix: Remove the extra json.dumps call
+                json.dump(current_config, config_file, indent=4)
             print("Configuration updated successfully!")
         else:
             print("Configuration is already up to date!")
