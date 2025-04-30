@@ -117,38 +117,55 @@
 
 To update your local DashPiX installation while preserving your settings:
 
-1. **Backup your configuration files**:
+1. **Initialize Git** (if not already done):
    ```bash
+   git init
+   git remote add origin https://github.com/ProgrammerNomad/DashPiX.git
+   ```
+
+2. **Backup your configuration files**:
+   ```bash
+   # On Windows
+   copy env.py env.backup.py
+   copy config.json config.backup.json
+   
+   # On Raspberry Pi
    cp env.py env.backup.py
    cp config.json config.backup.json
    ```
 
-2. **Pull the latest changes**:
+3. **Pull the latest changes**:
    ```bash
-   git fetch origin main
-   git stash    # Save any local changes
-   git pull origin main
-   git stash pop    # Restore local changes if needed
+   git pull origin master
    ```
 
-3. **Restore your configuration**:
+4. **Restore your configuration**:
    ```bash
+   # On Windows
+   copy env.backup.py env.py
+   copy config.backup.json config.json
+   
+   # On Raspberry Pi
    cp env.backup.py env.py
    cp config.backup.json config.json
    ```
 
-4. **Check for new configuration options**:
+5. **Check for new configuration options**:
    ```bash
-   # Compare example files with your backups
-   diff env.example.py env.backup.py
-   diff config.json.example config.backup.json
+   # On Windows
+   fc env.example.py env.py
+   fc config.json.example config.json
+   
+   # On Raspberry Pi
+   diff env.example.py env.py
+   diff config.json.example config.json
    ```
-   If there are new options, manually add them to your restored configuration files.
+   If there are new options, manually add them to your configuration files.
 
 > Note: 
-> - Always check the changelog or release notes for breaking changes before updating
-> - Keep your backup files until you confirm everything works correctly
-> - Never commit your personal `env.py` and `config.json` to git
+> - Always backup your configuration files before updating
+> - Check the changelog before updating
+> - Never commit your personal `env.py` and `config.json` files
 
 ---
 
@@ -201,3 +218,4 @@ This project is licensed under the **MIT License**. You can use, modify, and dis
 **Let the world see more, with less.** — DashPiX
 
 ---
+````
