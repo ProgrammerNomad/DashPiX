@@ -99,6 +99,40 @@
 
 ---
 
+### 🔄 Updating DashPiX
+
+To update your local DashPiX installation while preserving your settings:
+
+1. **Backup your environment file**:
+   ```bash
+   cp env.py env.backup.py
+   ```
+
+2. **Pull the latest changes**:
+   ```bash
+   git fetch origin main
+   git stash    # Save any local changes
+   git pull origin main
+   git stash pop    # Restore local changes if needed
+   ```
+
+3. **Check for environment changes**:
+   ```bash
+   diff env.example.py env.py
+   ```
+   If there are new environment variables, add them to your `env.py` file.
+
+4. **Update configuration**:
+   Compare your `config.json` with any new options:
+   ```bash
+   git diff config.json
+   ```
+   Add any new configuration options while keeping your existing settings.
+
+> Note: Always check the changelog or release notes for breaking changes before updating.
+
+---
+
 ### 📱 Customization
 You can toggle or change the display settings at any time by editing the `config.json` file. Here's a breakdown of the settings:
 
