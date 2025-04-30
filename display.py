@@ -10,7 +10,7 @@ from PIL import Image
 
 try:
     from env import OPENWEATHER_API_KEY, CITY_NAME
-    from update_config import update_config
+    from update_config import update_config, validate_config  # Add validate_config import
 except ImportError as e:
     print(f"Import error: {str(e)}")
     print("Please create env.py file from env.example.py template")
