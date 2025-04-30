@@ -94,10 +94,19 @@ def show_weather():
         if weather_data:
             temp = weather_data["main"]["temp"]
             weather_desc = weather_data["weather"][0]["description"]
+            
+            # Show weather info
             weather_text = f"{temp}°C, {weather_desc.capitalize()}"
             display_text(weather_text, small_font, WHITE, (50, 250))
+            
+            # Show location if enabled
+            if config.get("show_location", False):
+                location_text = f"Location: {config['city']}"
+                display_text(location_text, small_font, WHITE, (50, 280))
         else:
             display_text("Weather Info Unavailable", small_font, RED, (50, 250))
+            if config.get("show_location", False):
+                display_text(f"Location: {config['city']}", small_font, WHITE, (50, 280))
 
 # Function to show Wi-Fi status and IP address
 def show_network_info():
