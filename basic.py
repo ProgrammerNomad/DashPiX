@@ -94,16 +94,14 @@ def show_weather():
         except Exception:
             weather_data = None
     
-    # First show location
-    center_text(f"Location: {CITY_NAME}", sub_font, WHITE, 500)
-    
     if weather_data:
         temp = weather_data["main"]["temp"]
         weather_desc = weather_data["weather"][0]["description"]
-        weather_text = f"{temp}°C, {weather_desc.capitalize()}"
-        center_text(weather_text, sub_font, WHITE, 580)
+        # Combine location, symbol, and weather in one line
+        weather_text = f"{CITY_NAME} — {temp}°C, {weather_desc.capitalize()}"
+        center_text(weather_text, sub_font, WHITE, 500)
     else:
-        center_text("Weather Info Unavailable", sub_font, RED, 580)
+        center_text(f"{CITY_NAME} — Weather Info Unavailable", sub_font, RED, 500)
 
 def update_display():
     screen.fill(DARK_GREY)
