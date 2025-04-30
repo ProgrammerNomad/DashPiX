@@ -29,7 +29,9 @@ RED = (255, 0, 0)
 
 # Function to display text
 def display_text(text, font, color, position):
-    surface = font.render(text, True, color)
+    # Filter out characters above \uFFFF
+    filtered_text = ''.join(char for char in text if ord(char) <= 0xFFFF)
+    surface = font.render(filtered_text, True, color)
     screen.blit(surface, position)
 
 # Function to show current time and date
@@ -81,11 +83,19 @@ def show_network_info():
 def show_custom_message():
     if config["show_custom_message"]:
         try:
-            with open("message.txt", "r") as msg_file:
-                message = msg_file.read()
-            display_text(message, small_font, WHITE, (50, 350))
+            with open("message.txt", "r", encoding='utf-8') as msg_file:
+                message_lines = msg_file.read().splitlines()
+            
+            y_position = 350
+            for line in message_lines:
+                # Skip empty lines
+                if line.strip():
+                    display_text(line, small_font, WHITE, (50, y_position))
+                    y_position += 30  # Increment position for next line
         except FileNotFoundError:
             display_text("No Message Found", small_font, RED, (50, 350))
+        except Exception as e:
+            display_text(f"Error: {str(e)}", small_font, RED, (50, 350))
 
 # Function to show system info like CPU temperature
 def show_system_info():
