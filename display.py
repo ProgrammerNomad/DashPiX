@@ -4,6 +4,7 @@ import json
 import requests
 import socket
 from datetime import datetime
+from time import time
 try:
     from env import OPENWEATHER_API_KEY, CITY_NAME
 except ImportError:
@@ -35,6 +36,10 @@ GREY = (200, 200, 200)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
+# Add after other global variables
+last_weather_update = 0
+weather_data = None
+
 # Function to display text
 def display_text(text, font, color, position):
     # Filter out characters above \uFFFF
@@ -63,18 +68,30 @@ def show_greeting():
         greeting = "Good Evening!"
     display_text(greeting, small_font, WHITE, (50, 180))
 
-# Function to fetch and show weather
+# Update the show_weather function
 def show_weather():
+    global last_weather_update, weather_data
     if config["show_weather"]:
-        try:
-            url = f"http://api.openweathermap.org/data/2.5/weather?q={config['city']}&appid={config['api_key']}&units=metric"
-            response = requests.get(url)
-            data = response.json()
-            temp = data["main"]["temp"]
-            weather_desc = data["weather"][0]["description"]
+        current_time = time()
+        update_frequency = config.get("weather_update_frequency", 60)  # Default 60 seconds
+        
+        # Update weather data if enough time has passed
+        if current_time - last_weather_update >= update_frequency:
+            try:
+                url = f"http://api.openweathermap.org/data/2.5/weather?q={config['city']}&appid={config['api_key']}&units=metric"
+                response = requests.get(url)
+                weather_data = response.json()
+                last_weather_update = current_time
+            except Exception as e:
+                weather_data = None
+        
+        # Display weather data if available
+        if weather_data:
+            temp = weather_data["main"]["temp"]
+            weather_desc = weather_data["weather"][0]["description"]
             weather_text = f"{temp}°C, {weather_desc.capitalize()}"
             display_text(weather_text, small_font, WHITE, (50, 250))
-        except Exception as e:
+        else:
             display_text("Weather Info Unavailable", small_font, RED, (50, 250))
 
 # Function to show Wi-Fi status and IP address

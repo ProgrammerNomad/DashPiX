@@ -11,5 +11,6 @@
     "show_custom_message": false,
     "show_events": false,
     "show_cpu_temp": false,
-    "background_style": "light"
+    "background_style": "light",
+    "weather_update_frequency": 60
 }
