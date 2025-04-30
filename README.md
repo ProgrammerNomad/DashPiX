@@ -38,8 +38,12 @@
    cd DashPiX
    ```
 
-3. **Set Up Environment Variables**:
-   - Copy `env.example.py` to `env.py`:
+3. **Set Up Configuration Files**:
+   - Create config file from example:
+     ```bash
+     cp config.json.example config.json
+     ```
+   - Create environment file from example:
      ```bash
      cp env.example.py env.py
      ```
@@ -101,6 +105,11 @@
    @reboot python3 /home/pi/DashPiX/display.py
    ```
    > Note: When running on boot, you can still exit using the `Esc` key.
+
+> Note: 
+> - The `.example` files serve as templates and should not be modified directly
+> - Your personal `config.json` and `env.py` files will be ignored by git
+> - Keep the example files up to date with the latest configuration options
 
 ---
 
@@ -192,4 +201,3 @@ This project is licensed under the **MIT License**. You can use, modify, and dis
 **Let the world see more, with less.** — DashPiX
 
 ---
-````
