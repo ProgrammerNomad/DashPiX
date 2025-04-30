@@ -100,10 +100,8 @@
 ---
 
 ### 📱 Customization
-You can toggle or change the display settings at any time by editing the `config.json` file. Here’s a breakdown of the settings:
+You can toggle or change the display settings at any time by editing the `config.json` file. Here's a breakdown of the settings:
 
-- **api_key**: Your OpenWeatherMap API key for weather data.
-- **city**: The city for which you want weather information.
 - **show_time**: Set to `true` to display the time.
 - **show_date**: Set to `true` to display the current date.
 - **show_greeting**: Set to `true` to display a greeting based on the time of day.
@@ -116,6 +114,8 @@ You can toggle or change the display settings at any time by editing the `config
 - **show_events**: Set to `true` to show upcoming events (manual configuration).
 - **show_cpu_temp**: Set to `true` to show the CPU temperature of the Raspberry Pi.
 - **background_style**: Set to `light` or `dark` to choose the background style.
+
+> Note: OpenWeatherMap API key and city name are now configured in `env.py` for better security.
 
 ---
 
@@ -148,4 +148,3 @@ This project is licensed under the **MIT License**. You can use, modify, and dis
 **Let the world see more, with less.** — DashPiX
 
 ---
-````
