@@ -28,9 +28,9 @@ screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption("DashPiX Basic")
 
 # Update fonts for better hierarchy
-title_font = pygame.font.SysFont("Arial", 140, bold=True)  # Large title
-main_font = pygame.font.SysFont("Arial", 180, bold=True)   # Extra large bold time
-sub_font = pygame.font.SysFont("Arial", 60)     # Medium for other items
+title_font = pygame.font.SysFont("Arial", 80, bold=True)   # Smaller title size
+main_font = pygame.font.SysFont("Arial", 180, bold=True)   # Keep time size the same
+sub_font = pygame.font.SysFont("Arial", 60)     # Keep other text size the same
 
 # Colors
 WHITE = (255, 255, 255)
