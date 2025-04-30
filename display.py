@@ -7,9 +7,14 @@ from datetime import datetime
 from time import time
 try:
     from env import OPENWEATHER_API_KEY, CITY_NAME
-except ImportError:
+    from update_config import update_config
+except ImportError as e:
+    print(f"Import error: {str(e)}")
     print("Please create env.py file from env.example.py template")
     exit(1)
+
+# Update config with any new options
+update_config()
 
 # Load the configuration
 with open("config.json") as config_file:
@@ -32,6 +37,7 @@ small_font = pygame.font.SysFont("Arial", 30)
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+DARK_GREY = (25, 25, 25)  # Very dark grey for dark mode
 GREY = (200, 200, 200)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
@@ -134,7 +140,11 @@ def show_system_info():
 
 # Function to update the display
 def update_display():
-    screen.fill(BLACK)
+    # Set background color based on config
+    if config.get("background_style", "dark") == "dark":
+        screen.fill(DARK_GREY)
+    else:
+        screen.fill(BLACK)
     
     # Show features based on config
     if config["show_greeting"]:

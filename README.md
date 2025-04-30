@@ -39,19 +39,14 @@
    ```
 
 3. **Set Up Configuration Files**:
-   - Create config file from example:
-     ```bash
-     cp config.json.example config.json
-     ```
-   - Create environment file from example:
-     ```bash
-     cp env.example.py env.py
-     ```
-   - Edit `env.py` and add your OpenWeatherMap API key and city name:
-     ```python
-     OPENWEATHER_API_KEY = "your_openweathermap_api_key"
-     CITY_NAME = "YourCityName"
-     ```
+   ```bash
+   # Copy example files
+   copy config.json.example config.json
+   copy env.example.py env.py
+   
+   # Update configuration with new options
+   python update_config.py
+   ```
 
 4. **Configure Display Settings**:
    Edit the `config.json` file to enable or disable features by toggling the boolean values:
@@ -218,4 +213,3 @@ This project is licensed under the **MIT License**. You can use, modify, and dis
 **Let the world see more, with less.** — DashPiX
 
 ---
-````
