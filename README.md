@@ -218,4 +218,3 @@ This project is licensed under the **MIT License**. You can use, modify, and dis
 **Let the world see more, with less.** — DashPiX
 
 ---
-````
