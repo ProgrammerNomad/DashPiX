@@ -25,10 +25,10 @@ pygame.init()
 
 # Screen settings - Fullscreen
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-pygame.display.set_caption("DashPiX Basic")
+pygame.display.set_caption("DashPiX")
 
 # Update fonts for better hierarchy
-title_font = pygame.font.SysFont("Arial", 140)  # Biggest for title
+title_font = pygame.font.SysFont("Arial", 50)  # Biggest for title
 main_font = pygame.font.SysFont("Arial", 120)   # Large for time
 sub_font = pygame.font.SysFont("Arial", 60)     # Medium for other items
 
